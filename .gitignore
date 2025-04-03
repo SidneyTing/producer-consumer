@@ -1,3 +1,7 @@
+# Video directories
+/saved
+/upload
+
 # Compiled class file
 *.class
 
