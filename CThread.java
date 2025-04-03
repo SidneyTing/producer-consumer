@@ -18,8 +18,20 @@ public class CThread extends Thread {
             saved_dir.mkdirs();
         }
 
+        System.out.println("Consumer " + id + " waiting for Producer...");
+        Socket clientEndpoint = null;
+        do {
+            try {
+                clientEndpoint = new Socket("localhost", nPort);
+            } catch (IOException e) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {}
+            }
+        } while (clientEndpoint == null);
+        System.out.println("Consumer " + id + " connected!");
+
         try {
-            Socket clientEndpoint = new Socket("localhost", nPort);
             DataInputStream dis = new DataInputStream(clientEndpoint.getInputStream());
 
             while (true) {
