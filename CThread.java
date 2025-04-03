@@ -14,6 +14,10 @@ public class CThread extends Thread {
 
         File saved_dir = new File("saved");
 
+        if (!saved_dir.exists()) {
+            saved_dir.mkdirs();
+        }
+
         try {
             Socket clientEndpoint = new Socket("localhost", nPort);
             DataInputStream dis = new DataInputStream(clientEndpoint.getInputStream());

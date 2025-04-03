@@ -14,6 +14,10 @@ public class PThread extends Thread {
 		File upload_dir = new File("upload");
 		File in_dir = new File(upload_dir, String.valueOf(id));
 
+		if (!in_dir.exists()) {
+            in_dir.mkdirs();
+        }
+
 		try {
 			Socket serverEndpoint = serverSocket.accept();
 			DataOutputStream dos = new DataOutputStream(serverEndpoint.getOutputStream());
@@ -21,26 +25,27 @@ public class PThread extends Thread {
 			File[] videoFiles = in_dir.listFiles((dir, name) -> name.toLowerCase().endsWith(".mp4") || name.toLowerCase().endsWith(".mov"));
 
 			if (videoFiles == null || videoFiles.length == 0) {
-				System.out.println("Producer Thread " + id + ": No files detected!");
-			}
+				System.out.println("No files detected!" + "\tProducer Thread: " + id + "\tDirectory: " + in_dir);
 
-			for (File videoFile : videoFiles) {
-				System.out.println("Read file! \tProducer Thread: " + id + "\tFile: " + videoFile);		
-				
-				long fileSize = videoFile.length();
-                dos.writeLong(fileSize);
-				
-				FileInputStream fis = new FileInputStream(videoFile);
-
-				byte[] buffer = new byte[1024];
-				int bytesRead;
-				
-                while ((bytesRead = fis.read(buffer)) != -1) {
-                    dos.write(buffer, 0, bytesRead);
-                }
-
-				dos.flush();
-				fis.close();
+			} else {
+				for (File videoFile : videoFiles) {
+					System.out.println("Read file! \tProducer Thread: " + id + "\tFile: " + videoFile);		
+					
+					long fileSize = videoFile.length();
+					dos.writeLong(fileSize);
+					
+					FileInputStream fis = new FileInputStream(videoFile);
+	
+					byte[] buffer = new byte[1024];
+					int bytesRead;
+					
+					while ((bytesRead = fis.read(buffer)) != -1) {
+						dos.write(buffer, 0, bytesRead);
+					}
+	
+					dos.flush();
+					fis.close();
+				}
 			}
 
 			dos.close();
