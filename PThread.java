@@ -3,9 +3,11 @@ import java.net.*;
 
 public class PThread implements Runnable {
 	private int id;
+	private String host;
 
-	public PThread(int id) {
+	public PThread(int id, String host) {
 		this.id = id;
+		this.host = host;
 	}
 
 	public void run() {
@@ -22,7 +24,7 @@ public class PThread implements Runnable {
         Socket clientEndpoint = null;
         do {
             try {
-                clientEndpoint = new Socket("localhost", nPort);
+                clientEndpoint = new Socket(host, nPort);
             } catch (IOException e) {
                 try {
                     Thread.sleep(1000);
