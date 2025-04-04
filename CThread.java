@@ -1,15 +1,16 @@
 import java.io.*;
 import java.net.*;
 
-public class CThread extends Thread {
+public class CThread implements Runnable {
 	private int id;
+    private ServerSocket serverSocket;
 
-	public CThread(int id) {
+	public CThread(int id, ServerSocket serverSocket) {
 		this.id = id;
+        this.serverSocket = serverSocket;
 	}
 
     public void run() {
-        int nPort = 4000;
         int fileCtr = 0;
 
         File saved_dir = new File("saved");
@@ -18,21 +19,9 @@ public class CThread extends Thread {
             saved_dir.mkdirs();
         }
 
-        System.out.println("Consumer " + id + " waiting for Producer...");
-        Socket clientEndpoint = null;
-        do {
-            try {
-                clientEndpoint = new Socket("localhost", nPort);
-            } catch (IOException e) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ignored) {}
-            }
-        } while (clientEndpoint == null);
-        System.out.println("Consumer " + id + " connected!");
-
         try {
-            DataInputStream dis = new DataInputStream(clientEndpoint.getInputStream());
+            Socket serverEndpoint = serverSocket.accept();
+            DataInputStream dis = new DataInputStream(serverEndpoint.getInputStream());
 
             while (true) {
                 String out_filename = "Consumer" + id + "_" + fileCtr + ".mov";
@@ -65,7 +54,10 @@ public class CThread extends Thread {
             }
             
             dis.close();
-            clientEndpoint.close();
+            serverEndpoint.close();
+            serverSocket.close();
+
+            System.out.println("Consumer " + id + " stopped.");
 
         } catch (IOException e) {
             e.printStackTrace();

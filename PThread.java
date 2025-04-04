@@ -1,16 +1,16 @@
 import java.io.*;
 import java.net.*;
 
-public class PThread extends Thread {
+public class PThread implements Runnable {
 	private int id;
-	private ServerSocket serverSocket;
 
-	public PThread(int id, ServerSocket serverSocket) {
+	public PThread(int id) {
 		this.id = id;
-		this.serverSocket = serverSocket;
 	}
 
 	public void run() {
+		int nPort = 4000;
+
 		File upload_dir = new File("upload");
 		File in_dir = new File(upload_dir, String.valueOf(id));
 
@@ -18,9 +18,21 @@ public class PThread extends Thread {
             in_dir.mkdirs();
         }
 
+        System.out.println("Producer " + id + " waiting for Consumers...");
+        Socket clientEndpoint = null;
+        do {
+            try {
+                clientEndpoint = new Socket("localhost", nPort);
+            } catch (IOException e) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {}
+            }
+        } while (clientEndpoint == null);
+        System.out.println("Consumer " + id + " connected!");
+
 		try {
-			Socket serverEndpoint = serverSocket.accept();
-			DataOutputStream dos = new DataOutputStream(serverEndpoint.getOutputStream());
+			DataOutputStream dos = new DataOutputStream(clientEndpoint.getOutputStream());
 			
 			File[] videoFiles = in_dir.listFiles((dir, name) -> name.toLowerCase().endsWith(".mp4") || name.toLowerCase().endsWith(".mov"));
 
@@ -49,11 +61,7 @@ public class PThread extends Thread {
 			}
 
 			dos.close();
-
-			serverEndpoint.close();
-			serverSocket.close();
-
-			System.out.println("Producer " + id + " stopped.");
+			clientEndpoint.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();

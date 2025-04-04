@@ -1,20 +1,15 @@
-import java.io.IOException;
-import java.net.ServerSocket;
+import java.util.concurrent.*;
 
 public class Producer {
-	public static void main(String[] args) {
-		int nPort = 4000;
-		int p = 3;
+    public static void main(String[] args) {
+        int p = 2;
 
-		try {
-			ServerSocket serverSocket = new ServerSocket(nPort);
+        ExecutorService producerPool = Executors.newFixedThreadPool(p);
 
-			for (int i = 0; i < p; i++) {
-				PThread thread = new PThread(i, serverSocket);
-				thread.start();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        for (int i = 0; i < p; i++) {
+            producerPool.execute(new PThread(i));
+        }
+
+        producerPool.shutdown();
+    }
 }
