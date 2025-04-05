@@ -5,7 +5,7 @@ public class Consumer {
         int port = 4000;
         int c = 1;
 
-        BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>(1);
+        BlockingQueue<VideoData> queue = new LinkedBlockingQueue<>(1);
 
         Thread dispatcher = new Thread(new Dispatcher(port, queue));
         dispatcher.start();
@@ -18,4 +18,3 @@ public class Consumer {
         consumerPool.shutdown();
     }
 }
-

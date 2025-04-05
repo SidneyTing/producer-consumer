@@ -28,7 +28,7 @@ public class PThread implements Runnable {
             } catch (IOException e) {
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException e1) {}
             }
         } while (clientEndpoint == null);
         System.out.println("Connected to Consumer " + id + "!");
@@ -39,24 +39,37 @@ public class PThread implements Runnable {
 
 		} else {
 			try {
-				DataOutputStream dos = new DataOutputStream(clientEndpoint.getOutputStream());
+				ObjectOutputStream oos = new ObjectOutputStream(clientEndpoint.getOutputStream());
+
 				for (File videoFile : videoFiles) {
-					System.out.println("Read file! \tProducer Thread: " + id + "\tFile: " + videoFile);		
-					
-					dos.writeLong(videoFile.length());
-					
 					FileInputStream fis = new FileInputStream(videoFile);
-	
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+					System.out.println("Read file! \tProducer Thread: " + id + "\tFile: " + videoFile);	
+
 					byte[] buffer = new byte[1024];
 					int bytesRead;
-					
+
 					while ((bytesRead = fis.read(buffer)) != -1) {
-						dos.write(buffer, 0, bytesRead);
+						baos.write(buffer, 0, bytesRead);
 					}
+
+					String videoName = videoFile.getName();
+
+					String title = videoName.substring(0, videoName.lastIndexOf('.'));
+					byte[] bytes = baos.toByteArray();
+					String format = videoName.substring(videoName.lastIndexOf('.') + 1, videoName.length());
+
+					oos.writeObject(new VideoData(title, bytes, format));
 	
-					dos.flush();
+					oos.flush();
+					baos.flush();
+
+					baos.close();
 					fis.close();
 				}
+
+				oos.close();
 
 			} catch (IOException e) {
 				e.printStackTrace();

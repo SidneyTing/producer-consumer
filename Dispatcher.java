@@ -4,9 +4,9 @@ import java.util.concurrent.*;
 
 public class Dispatcher implements Runnable {
     private int port;
-    private BlockingQueue<byte[]> queue;
+    private BlockingQueue<VideoData> queue;
 
-    public Dispatcher(int port, BlockingQueue<byte[]> queue) {
+    public Dispatcher(int port, BlockingQueue<VideoData> queue) {
         this.port = port;
         this.queue = queue;
     }
@@ -26,20 +26,18 @@ public class Dispatcher implements Runnable {
     }
 
     private void produce(Socket endpoint) {
-        try (DataInputStream dis = new DataInputStream(endpoint.getInputStream())) {
+        try (ObjectInputStream ois = new ObjectInputStream(endpoint.getInputStream())) {
             while (true) {
-                long videoSize;
+                VideoData video;
                 try {
-                    videoSize = dis.readLong();
-                } catch (EOFException e) {
+                    video = (VideoData) ois.readObject();
+                } catch (EOFException | ClassNotFoundException e) {
                     break;
                 }
     
-                byte[] videoBytes = new byte[(int) videoSize];
-                dis.readFully(videoBytes);
-                queue.offer(videoBytes);
-
-                // System.out.println("Successfully enqueued!");
+                if (!queue.offer(video)) {
+                    System.out.println("Queue is full! \tDropped File: " + video.getTitle() + "." + video.getFormat());
+                }
             }
 
         } catch (IOException e) {

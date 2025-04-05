@@ -3,16 +3,14 @@ import java.util.concurrent.*;
 
 public class CThread implements Runnable {
 	private int id;
-    private BlockingQueue<byte[]> queue;
+    private BlockingQueue<VideoData> queue;
 
-	public CThread(int id, BlockingQueue<byte[]> queue) {
+	public CThread(int id, BlockingQueue<VideoData> queue) {
 		this.id = id;
         this.queue = queue;
 	}
 
     public void run() {
-        int fileCtr = 0;
-
         File saved_dir = new File("saved");
 
         if (!saved_dir.exists()) {
@@ -20,11 +18,14 @@ public class CThread implements Runnable {
         }
 
         while (true) {
-            String out_filename = "Consumer" + id + "_" + fileCtr + ".mov";
-            File out_file = new File(saved_dir, out_filename);
-
             try {
-                byte[] videoBytes = queue.take();
+                VideoData video = queue.take();
+                String title = video.getTitle();
+                byte[] videoBytes = video.getBytes();
+                String format = video.getFormat();
+
+                String out_filename = title + "." + format;
+                File out_file = new File(saved_dir, out_filename);
 
                 try (FileOutputStream fos = new FileOutputStream(out_file)) {
                     fos.write(videoBytes);
@@ -37,8 +38,6 @@ public class CThread implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            fileCtr++;
         }
 
         // System.out.println("Consumer " + id + " stopped.");
