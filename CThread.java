@@ -20,6 +20,16 @@ public class CThread implements Runnable {
         while (true) {
             try {
                 VideoData video = queue.take();
+
+                String hash = video.getHash();
+                
+                if (Consumer.processedFiles.contains(hash)) {
+                    System.out.println("Duplicate file detected! Skipping: " + video.getTitle() + "." + video.getFormat());
+                    continue;
+                }
+      
+                Consumer.processedFiles.add(hash);
+                
                 String title = video.getTitle();
                 byte[] videoBytes = video.getBytes();
                 String format = video.getFormat();
