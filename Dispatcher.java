@@ -35,12 +35,10 @@ public class Dispatcher implements Runnable {
                     break;
                 }
     
-                if (!queue.offer(video)) {
-                    System.out.println("Queue is full! \tDropped File: " + video.getTitle() + "." + video.getFormat());
-                }
+                queue.put(video);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
