@@ -1,6 +1,6 @@
 # Video directories
 /saved
-# /upload
+/upload
 
 # Compiled class file
 *.class

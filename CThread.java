@@ -1,13 +1,13 @@
 import java.io.*;
-import java.net.*;
+import java.util.concurrent.*;
 
 public class CThread implements Runnable {
 	private int id;
-    private ServerSocket serverSocket;
+    private BlockingQueue<byte[]> queue;
 
-	public CThread(int id, ServerSocket serverSocket) {
+	public CThread(int id, BlockingQueue<byte[]> queue) {
 		this.id = id;
-        this.serverSocket = serverSocket;
+        this.queue = queue;
 	}
 
     public void run() {
@@ -19,48 +19,28 @@ public class CThread implements Runnable {
             saved_dir.mkdirs();
         }
 
-        try {
-            Socket serverEndpoint = serverSocket.accept();
-            DataInputStream dis = new DataInputStream(serverEndpoint.getInputStream());
+        while (true) {
+            String out_filename = "Consumer" + id + "_" + fileCtr + ".mov";
+            File out_file = new File(saved_dir, out_filename);
 
-            while (true) {
-                String out_filename = "Consumer" + id + "_" + fileCtr + ".mov";
+            try {
+                byte[] videoBytes = queue.take();
 
-                long fileSize;
-                try {
-                    fileSize = dis.readLong();
-                } catch (EOFException e) {
-                    System.out.println("Consumer " + id + " stopped.");
-                    break;
-                }
-
-                File out_file = new File(saved_dir, out_filename);
-                FileOutputStream fos = new FileOutputStream(out_file);
-
-                byte[] buffer = new byte[1024];
-                long remaining = fileSize;
-    
-                while (remaining > 0) {
-                    int bytesRead = dis.read(buffer, 0, (int) Math.min(buffer.length, remaining));
-                    
-                    fos.write(buffer, 0, bytesRead);
-                    remaining -= bytesRead;
+                try (FileOutputStream fos = new FileOutputStream(out_file)) {
+                    fos.write(videoBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
                 System.out.println("Saved file! \tConsumer Thread: " + id + "\tFile: " + out_filename);
-    
-                fos.close();
-                fileCtr++;
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            
-            dis.close();
-            serverEndpoint.close();
-            serverSocket.close();
 
-            System.out.println("Consumer " + id + " stopped.");
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            fileCtr++;
         }
+
+        // System.out.println("Consumer " + id + " stopped.");
     }
 }

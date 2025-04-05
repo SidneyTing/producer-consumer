@@ -11,7 +11,7 @@ public class PThread implements Runnable {
 	}
 
 	public void run() {
-		int nPort = 4000;
+		int port = 4000;
 
 		File upload_dir = new File("upload");
 		File in_dir = new File(upload_dir, String.valueOf(id));
@@ -20,33 +20,30 @@ public class PThread implements Runnable {
             in_dir.mkdirs();
         }
 
-        System.out.println("Producer " + id + " waiting for Consumers...");
+        System.out.println("Producer " + id + " listening for Consumers...");
         Socket clientEndpoint = null;
         do {
             try {
-                clientEndpoint = new Socket(host, nPort);
+                clientEndpoint = new Socket(host, port);
             } catch (IOException e) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ignored) {}
             }
         } while (clientEndpoint == null);
-        System.out.println("Consumer " + id + " connected!");
+        System.out.println("Connected to Consumer " + id + "!");
 
-		try {
-			DataOutputStream dos = new DataOutputStream(clientEndpoint.getOutputStream());
-			
-			File[] videoFiles = in_dir.listFiles((dir, name) -> name.toLowerCase().endsWith(".mp4") || name.toLowerCase().endsWith(".mov"));
+		File[] videoFiles = in_dir.listFiles((dir, name) -> name.toLowerCase().endsWith(".mp4") || name.toLowerCase().endsWith(".mov"));
+		if (videoFiles == null || videoFiles.length == 0) {
+			System.out.println("No files detected!" + "\tProducer Thread: " + id + "\tDirectory: " + in_dir);
 
-			if (videoFiles == null || videoFiles.length == 0) {
-				System.out.println("No files detected!" + "\tProducer Thread: " + id + "\tDirectory: " + in_dir);
-
-			} else {
+		} else {
+			try {
+				DataOutputStream dos = new DataOutputStream(clientEndpoint.getOutputStream());
 				for (File videoFile : videoFiles) {
 					System.out.println("Read file! \tProducer Thread: " + id + "\tFile: " + videoFile);		
 					
-					long fileSize = videoFile.length();
-					dos.writeLong(fileSize);
+					dos.writeLong(videoFile.length());
 					
 					FileInputStream fis = new FileInputStream(videoFile);
 	
@@ -60,11 +57,14 @@ public class PThread implements Runnable {
 					dos.flush();
 					fis.close();
 				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+		}
 
-			dos.close();
+		try {
 			clientEndpoint.close();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -2,8 +2,8 @@ import java.util.concurrent.*;
 
 public class Producer {
     public static void main(String[] args) {
-        int p = 3;
         String host = args.length > 0 ? args[0] : "localhost";
+        int p = 7;
 
         ExecutorService producerPool = Executors.newFixedThreadPool(p);
 
