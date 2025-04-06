@@ -7,8 +7,12 @@ public class Consumer {
     public static void main(String[] args) {
         int port = 4000;
         int c = 1;
+        int http_port = 8080;
 
         BlockingQueue<VideoData> queue = new LinkedBlockingQueue<>(1);
+
+        Thread httpServer = new Thread(() -> startHttpServer(http_port));
+        httpServer.start();
 
         Thread dispatcher = new Thread(new Dispatcher(port, queue));
         dispatcher.start();
@@ -19,5 +23,13 @@ public class Consumer {
         }
 
         consumerPool.shutdown();
+    }
+
+    public static void startHttpServer(int port) {
+        try {
+            new HttpFileServer(port).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

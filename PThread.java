@@ -33,7 +33,7 @@ public class PThread implements Runnable {
         } while (clientEndpoint == null);
         System.out.println("Connected to Consumer " + id + "!");
 
-		File[] videoFiles = in_dir.listFiles((dir, name) -> name.toLowerCase().endsWith(".mp4") || name.toLowerCase().endsWith(".mov"));
+		File[] videoFiles = in_dir.listFiles((dir, name) -> name.endsWith(".mp4") || name.endsWith(".mov"));
 		if (videoFiles == null || videoFiles.length == 0) {
 			System.out.println("No files detected!" + "\tProducer Thread: " + id + "\tDirectory: " + in_dir);
 
@@ -42,31 +42,17 @@ public class PThread implements Runnable {
 				ObjectOutputStream oos = new ObjectOutputStream(clientEndpoint.getOutputStream());
 
 				for (File videoFile : videoFiles) {
-					FileInputStream fis = new FileInputStream(videoFile);
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
 					System.out.println("Read file! \tProducer Thread: " + id + "\tFile: " + videoFile);	
-
-					byte[] buffer = new byte[1024];
-					int bytesRead;
-
-					while ((bytesRead = fis.read(buffer)) != -1) {
-						baos.write(buffer, 0, bytesRead);
-					}
 
 					String videoName = videoFile.getName();
 
 					String title = videoName.substring(0, videoName.lastIndexOf('.'));
-					byte[] bytes = baos.toByteArray();
+					byte[] bytes = Helper.convertFileToBytes(videoFile);
 					String format = videoName.substring(videoName.lastIndexOf('.') + 1, videoName.length());
 
 					oos.writeObject(new VideoData(title, bytes, format));
 	
 					oos.flush();
-					baos.flush();
-
-					baos.close();
-					fis.close();
 				}
 
 				oos.close();

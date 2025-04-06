@@ -1,0 +1,43 @@
+h1 {
+    text-align: center;
+}
+
+.preview {
+    width: 300px;
+    height: 300px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+#container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.viewer {
+    text-align: center;
+    padding: 0px 20px;
+}
+
+#video-player {
+    max-width: 100%;
+    height: auto;
+}
+
+.back-button {
+    font-size: 1.5rem;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #1961fc;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.empty-message {
+    font-size: 2rem;
+    color: #b5b5b5;
+    margin: auto;
+    padding: 50px;
+}

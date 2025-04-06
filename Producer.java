@@ -3,7 +3,7 @@ import java.util.concurrent.*;
 public class Producer {
     public static void main(String[] args) {
         String host = args.length > 0 ? args[0] : "localhost";
-        int p = 7;
+        int p = 5;
 
         ExecutorService producerPool = Executors.newFixedThreadPool(p);
 

@@ -1,7 +1,6 @@
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 public class VideoData implements Serializable {
     private final String title;
