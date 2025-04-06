@@ -39,17 +39,16 @@ Consumer.java
     /2/
     /3/
     /4/
-    /5/
 ```
 
 4. On the **Consumer**, machine run: ```java Consumer```.
     - Visit ```http://localhost:8080/``` to view the browser-based GUI.
 5. To begin uploading, on the **Producer** machine, run: ```java Producer <consumer-ip-address>```.
-    - All videos are saved in the `saved` folder of the **Consumer** machine. These are also viewable on the browser.
+    - All videos are stored in the `saved` folder of the **Consumer** machine. These are also viewable on the browser.
 
 ## Configurations (in config.txt)
 ```
 Coming soon...
 ```
 
-NOTE: Ensure that config.txt is in the same directory as the source code.
+NOTE: Ensure that config.txt is in the root directory.

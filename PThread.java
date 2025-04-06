@@ -20,7 +20,7 @@ public class PThread implements Runnable {
             in_dir.mkdirs();
         }
 
-        System.out.println("Producer " + id + " listening for Consumers...");
+        System.out.println("Producer " + id + " waiting for Consumers...");
         Socket clientEndpoint = null;
         do {
             try {
@@ -31,7 +31,6 @@ public class PThread implements Runnable {
                 } catch (InterruptedException e1) {}
             }
         } while (clientEndpoint == null);
-        System.out.println("Connected to Consumer " + id + "!");
 
 		File[] videoFiles = in_dir.listFiles((dir, name) -> name.endsWith(".mp4") || name.endsWith(".mov"));
 		if (videoFiles == null || videoFiles.length == 0) {
