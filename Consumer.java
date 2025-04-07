@@ -8,6 +8,7 @@ public class Consumer {
     private static final int MIN_CONSUMER_THREADS = 1;
     private static final int MAX_CONSUMER_THREADS = 10;
     private static final int DEFAULT_CONSUMER_THREADS = 1;
+    
     private static final int MIN_QUEUE_SIZE = 1;
     private static final int MAX_QUEUE_SIZE = 100;
     private static final int DEFAULT_QUEUE_SIZE = 1;

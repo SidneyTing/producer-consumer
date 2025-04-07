@@ -30,7 +30,7 @@ Consumer.java
 ## Dependencies
 
 ### FFmpeg (Required for video compression)
-The consumer machine requires FFmpeg to be installed for video compression. 
+The producer machine requires FFmpeg to be installed for video compression. 
 
 #### Installation:
 

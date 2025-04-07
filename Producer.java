@@ -2,7 +2,6 @@ import java.util.concurrent.*;
 import java.io.*;
 
 public class Producer {
-    // Constants for validation
     private static final int MIN_PRODUCER_THREADS = 1;
     private static final int MAX_PRODUCER_THREADS = 10;
     private static final int DEFAULT_PRODUCER_THREADS = 5;
