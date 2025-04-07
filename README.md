@@ -93,7 +93,7 @@ If the configuration file is missing or contains invalid values, the system will
 ### Example (config.txt)
 ```
 p 5
-c 5
+c 1
 q 1
 ```
 
