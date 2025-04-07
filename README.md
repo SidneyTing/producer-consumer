@@ -30,7 +30,7 @@ Consumer.java
 ## Dependencies
 
 ### FFmpeg (Required for video compression)
-The producer machine requires FFmpeg to be installed for video compression. 
+The **Producer** machine requires FFmpeg to be installed for video compression. 
 
 #### Installation:
 
@@ -89,5 +89,12 @@ ffmpeg -version
    - Higher values allow more videos to be buffered before processing
 
 If the configuration file is missing or contains invalid values, the system will use the default values.
+
+### Example (config.txt)
+```
+p 5
+c 5
+q 1
+```
 
 NOTE: Ensure that config.txt is in the root directory of both producer and consumer machines.
