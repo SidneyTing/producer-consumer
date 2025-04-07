@@ -10,6 +10,7 @@ public class Producer {
         String host = args.length > 0 ? args[0] : "localhost";
         int p = 5; 
 
+        System.out.println("CONFIGURATIONS:");
         try (BufferedReader reader = new BufferedReader(new FileReader("config.txt"))) {
             String line = reader.readLine();
             try {
@@ -30,6 +31,8 @@ public class Producer {
         } catch (IOException e) {
             System.out.println("Could not read config.txt, using default producer threads: " + p);
         }
+
+        System.out.println("");
 
         ExecutorService producerPool = Executors.newFixedThreadPool(p);
 

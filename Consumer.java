@@ -40,6 +40,7 @@ public class Consumer {
         int c = 1; 
         int q = 1; 
         
+        System.out.println("CONFIGURATIONS:");
         try (BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILE))) {
             reader.readLine();
             
@@ -79,6 +80,8 @@ public class Consumer {
         } catch (IOException e) {
             System.out.println("Could not read config.txt, using defaults: c=" + c + ", q=" + q);
         }
+
+        System.out.println("");
         
         return new int[] {c, q};
     }

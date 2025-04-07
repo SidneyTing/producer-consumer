@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.concurrent.*;
 
 public class VideoCompressor {
     
@@ -73,8 +72,8 @@ public class VideoCompressor {
             return compressedBytes;
             
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Falling back to original video data: " + e.getMessage());
+            // e.printStackTrace();
+            System.err.println("Video compression failed! Falling back to original video data:\n" + e.getMessage());
             return inputVideoBytes; 
         } finally {
             if (tempInput.exists()) tempInput.delete();
