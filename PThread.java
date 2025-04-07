@@ -44,13 +44,24 @@ public class PThread implements Runnable {
 					System.out.println("Read file! \tProducer Thread: " + id + "\tFile: " + videoFile);	
 
 					String videoName = videoFile.getName();
-
 					String title = videoName.substring(0, videoName.lastIndexOf('.'));
-					byte[] bytes = Helper.convertFileToBytes(videoFile);
 					String format = videoName.substring(videoName.lastIndexOf('.') + 1, videoName.length());
 
-					oos.writeObject(new VideoData(title, bytes, format));
-	
+					byte[] originalBytes = Helper.convertFileToBytes(videoFile);
+
+					System.out.println("Compressing video: " + videoName);
+                    byte[] compressedBytes;
+                    try {
+                        long startTime = System.currentTimeMillis();
+                        compressedBytes = VideoCompressor.compressVideo(originalBytes);
+                        long endTime = System.currentTimeMillis();
+                        System.out.println("Compression completed in " + (endTime - startTime) + "ms");
+                    } catch (Exception e) {
+                        System.err.println("Compression failed, using original uncompressed video data: " + e.getMessage());
+                        compressedBytes = originalBytes; 
+                    }
+
+					oos.writeObject(new VideoData(title, compressedBytes, format));
 					oos.flush();
 				}
 

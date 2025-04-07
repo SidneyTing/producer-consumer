@@ -30,15 +30,7 @@ public class CThread implements Runnable {
       
                 Consumer.processedFiles.add(hash);
 
-                byte[] originalBytes = video.getBytes();
-                byte[] compressedBytes = originalBytes;
-                
-                try {
-                    compressedBytes = VideoCompressor.compressVideo(originalBytes);               
-                } catch (Exception e) {
-                    System.err.println("Compression failed: " + e.getMessage());
-                    compressedBytes = originalBytes;
-                }
+                byte[] compressedBytes = video.getBytes();
                 
                 String title = video.getTitle();
                 String format = video.getFormat();
