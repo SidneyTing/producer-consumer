@@ -35,7 +35,10 @@ public class Dispatcher implements Runnable {
                     break;
                 }
     
-                queue.put(video);
+                if (queue.remainingCapacity() == 0) {
+                    System.out.println("Queue is full. Producers waiting for space...");
+                }
+                queue.put(video);  // blocking insert
             }
 
         } catch (IOException | InterruptedException e) {
