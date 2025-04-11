@@ -19,10 +19,10 @@ public class CThread implements Runnable {
 
         while (true) {
             try {
-                VideoData video = queue.take();
+                VideoData video = queue.take();  // blocking
 
+                // Duplication detection
                 String hash = video.getHash();
-                
                 if (Consumer.processedFiles.contains(hash)) {
                     System.out.println("Duplicate file detected! Skipping: " + video.getTitle() + "." + video.getFormat());
                     continue;
@@ -35,6 +35,7 @@ public class CThread implements Runnable {
                 String title = video.getTitle();
                 String format = video.getFormat();
 
+                // Reconstruct file
                 String out_filename = title + "." + format;
                 File out_file = new File(saved_dir, out_filename);
 

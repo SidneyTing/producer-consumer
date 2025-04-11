@@ -47,6 +47,7 @@ public class PThread implements Runnable {
 					String title = videoName.substring(0, videoName.lastIndexOf('.'));
 					String format = videoName.substring(videoName.lastIndexOf('.') + 1, videoName.length());
 
+					// Compression
 					byte[] originalBytes = Helper.convertFileToBytes(videoFile);
 
 					System.out.println("Compressing video: " + videoName);
@@ -61,6 +62,7 @@ public class PThread implements Runnable {
                         compressedBytes = originalBytes; 
                     }
 
+					// Send video
 					oos.writeObject(new VideoData(title, compressedBytes, format));
 					oos.flush();
 				}
