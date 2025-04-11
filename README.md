@@ -64,7 +64,7 @@ ffmpeg -version
     /4/
 ```
 
-4. On the **Consumer**, machine run: ```java Consumer```.
+4. On the **Consumer** machine, run: ```java Consumer```.
     - Visit ```http://localhost:8080/``` to view the browser-based GUI.
 5. To begin uploading, on the **Producer** machine, run: ```java Producer <consumer-ip-address>```.
     - All videos are stored in the `saved` folder of the **Consumer** machine. These are also viewable on the browser.
